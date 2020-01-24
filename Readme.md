@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий](https://up.htmlacademy.ru/javascript/19/user/1174935).
-* Наставник: [Александр Мастеров] (https://htmlacademy.ru/profile/id912463).
+* Наставник: [Александр Мастеров](https://htmlacademy.ru/profile/id912463).
 
 ---
 
