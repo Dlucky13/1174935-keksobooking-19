@@ -52,26 +52,26 @@ var generateAdvert = function (id) {
   };
   return {
     author: {
-      avatar: '../img/avatars/user0' + id + '.png',
+      avatar: 'img/avatars/user0' + id + '.png',
     },
     offer: {
-      'title': 'Снимите жилье',
-      'adress': location.x + ', ' + location.y,
-      'price': getRandomNumber(1, 30) + ',' + getRandomNumber(1, 1000),
-      'type': getRandomItem(OFFER_TYPES),
-      'rooms': getRandomNumber(1, 50),
-      'guests': getRandomNumber(1, 6),
-      'checkin': getRandomItem(CHECKIN_TIMES),
-      'checkout': getRandomItem(CHECKOUT_TIMES),
-      'features': getRandomNumber(0, FEATURES.length),
-      'description': 'описание',
-      'photos': getRandomItem(PHOTOS),
+      title: 'Снимите жилье',
+      adress: location.x + ', ' + location.y,
+      price: getRandomNumber(1, 1000),
+      type: getRandomItem(OFFER_TYPES),
+      rooms: getRandomNumber(1, 50),
+      guests: getRandomNumber(1, 6),
+      checkin: getRandomItem(CHECKIN_TIMES),
+      checkout: getRandomItem(CHECKOUT_TIMES),
+      features: FEATURES.slice(0, getRandomNumber(0, FEATURES.length)),
+      description: 'описание',
+      photos: PHOTOS.slice(0, getRandomNumber(0, PHOTOS.length)),
     },
     location: location,
   };
 };
 
-var generateAdverts = function (ADVERT_COUNT) {
+var generateAdverts = function () {
   var adverts = [];
   for (var i = 1; i <= ADVERT_COUNT; i++) {
     var advert = generateAdvert(i);
@@ -88,7 +88,7 @@ var pinTemplate = document.querySelector('#pin')
 .content
 .querySelector('.map__pin');
 
-var renderPin = function(advert) {
+var renderPin = function (advert) {
   var pin = pinTemplate.cloneNode(true);
   var avatarImg = pin.querySelector('img');
 
@@ -102,9 +102,9 @@ var renderPin = function(advert) {
 };
 
 var addPins = function (adverts) {
-  var fragment = document.createDocumentFragment()
+  var fragment = document.createDocumentFragment();
 
-  for (var i = 0 ; i < ADVERT_COUNT; i++) {
+  for (var i = 0; i < ADVERT_COUNT; i++) {
     var pin = renderPin(adverts[i]);
     fragment.appendChild(pin);
   }
@@ -115,30 +115,3 @@ var addPins = function (adverts) {
 var adverts = generateAdverts(ADVERT_COUNT);
 
 addPins(adverts);
-
-
-// var offerRent = {
-//   "author": {
-//     "avatar": 'img/avatars/user0' + id;
-//     // строка, адрес изображения вида img/avatars/user{{xx}}.png, где {{xx}} это число от 1 до 8 с ведущим нулём.
-//     // Например, 01, 02 и т. д. Адреса изображений не повторяются
-//     },
-//   "offer": {
-//     "title": 'Cнимите жилье';
-//     "address": строка, адрес предложения. Для простоты пусть пока представляет собой запись вида "{{location.x}}, {{location.y}}", например, "600, 350"
-//     "price": число, стоимость
-//     "type": //строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
-//     "rooms": число, количество комнат
-//     "guests": число, количество гостей, которое можно разместить
-//     "checkin": строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00,
-//     "checkout": строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
-//     "features": массив строк случайной длины из ниже предложенных: "wifi", "dishwasher", "parking", "washer", "elevator", "conditioner",
-//     "description": строка с описанием,
-//     "photos": массив строк случайной длины, содержащий адреса фотографий
-//     },
-
-//   "location": {
-//       "x": случайное число, координата x метки на карте. Значение ограничено размерами блока, в котором перетаскивается метка.
-//       "y": случайное число, координата y метки на карте от 130 до 630.
-//     }
-// }
