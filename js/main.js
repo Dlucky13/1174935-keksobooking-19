@@ -104,7 +104,7 @@ var renderPin = function (advert) {
 var addPins = function (adverts) {
   var fragment = document.createDocumentFragment();
 
-  for (var i = 0; i < ADVERT_COUNT; i++) {
+  for (var i = 0; i < adverts.length; i++) {
     var pin = renderPin(adverts[i]);
     fragment.appendChild(pin);
   }
