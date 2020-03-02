@@ -111,63 +111,68 @@ var addPins = function (adverts) {
 
 var adverts = generateAdverts(ADVERT_COUNT);
 
-// addPins(adverts);
-var fieldsets = document.querySelectorAll('fieldset');
-var formSelects = document.querySelectorAll('select');
+var advertFormFields = document.querySelectorAll('fieldset , select');
 
-var disableFieldsets = function (array) {
-  array.forEach (function (item, index, array) {
+var disableFormFields = function (array) {
+  array.forEach(function (item) {
     item.disabled = true;
   });
 };
 
-var pageDeactivate = function() {
-  disableFieldsets(fieldsets);
-  disableFieldsets(formSelects);
+var deactivatePage = function () {
+  disableFormFields(advertFormFields);
 };
+
+var onDomLoad = function () {
+  deactivatePage();
+};
+
+document.addEventListener('DOMContentLoaded', onDomLoad);
 
 var map = document.querySelector('.map');
-var formAd = document.querySelector('.ad-form');
+var advertForm = document.querySelector('.ad-form');
 
-var cancelInputDisable = function (array) {
-  array.forEach (function (item, index, array) {
+var advertFormFieldsEnable = function (array) {
+  array.forEach(function (item) {
     item.disabled = false;
-});
+  });
 };
 
-var cancelElementHidden = function (element, classRemove) {
+var elementCancelHidden = function (element, classRemove) {
   element.classList.remove(classRemove);
-}
+};
 
-var pageActivate = function () {
-  cancelInputDisable(fieldsets);
-  cancelInputDisable(formSelects);
-  cancelElementHidden(map, 'map--faded');
-  cancelElementHidden(formAd, 'ad-form--disabled');
+var activatePage = function () {
+  advertFormFieldsEnable(advertFormFields);
+  elementCancelHidden(map, 'map--faded');
+  elementCancelHidden(advertForm, 'ad-form--disabled');
   coords = getMainPinCoords(MainPinSize.HEIGHT);
   renderAddressInput(coords);
-  guestsNumberLimit(roomNumber.value);
+  guestsNumberLimit(roomNumber);
+  addPins(adverts);
+  mainPin.removeEventListener('keydown', onEnterKeyPress);
+  document.removeEventListener('mousedown', onMainPinMouseDown);
 };
 
 var mainPin = document.querySelector('.map__pin--main');
-var MAIN_MOUSE_BUTTON = 1;
+var MAIN_MOUSE_BUTTON = 0;
 
-var mouseDownMainPinHandler = function(evt) {
-  if (evt.which === MAIN_MOUSE_BUTTON) {
-    pageActivate();
-  };
+var onMainPinMouseDown = function (evt) {
+  if (evt.button === MAIN_MOUSE_BUTTON) {
+    activatePage();
+  }
 };
 
-var enterClickMainPinHandler = function(evt) {
+var onEnterKeyPress = function (evt) {
   if (evt.key === 'Enter') {
-    pageActivate();
-  };
+    activatePage();
+  }
 };
 
-mainPin.addEventListener ('mousedown', mouseDownMainPinHandler);
-mainPin.addEventListener ('keydown', enterClickMainPinHandler);
+mainPin.addEventListener('mousedown', onMainPinMouseDown);
+mainPin.addEventListener('keydown', onEnterKeyPress);
 
-//передаю координаты метки в input
+// передаю координаты метки в input
 var pinAdressInput = document.querySelector('#address');
 
 var MainPinSize = {
@@ -193,75 +198,71 @@ var coords = getMainPinCoords(MainPinSize.RADIUS);
 renderAddressInput(coords);
 
 
-//валидация полей
+// валидация полей
 // изменение минимальный стоимости в зависимости от типа жилья
 var formSelectType = document.querySelector('#type');
 var formPrice = document.querySelector('#price');
 
 var formPriceSwitch = function () {
   switch (formSelectType.value) {
-    case ('bungalo'):
-      formPrice.placeholder = '0';
-      formPrice.min = '0';
+    case 'bungalo':
+      formPrice.placeholder = 0;
+      formPrice.min = 0;
       break;
-    case ('flat'):
-      formPrice.placeholder = '1000';
-      formPrice.min = '1000';
+    case 'flat':
+      formPrice.placeholder = 1000;
+      formPrice.min = 1000;
       break;
-    case ('house'):
-      formPrice.placeholder = '5000';
-      formPrice.min = '5000';
+    case 'house':
+      formPrice.placeholder = 5000;
+      formPrice.min = 5000;
       break;
-    case ('palace'):
-      formPrice.placeholder = '10000';
-      formPrice.min = '10000';
+    case 'palace':
+      formPrice.placeholder = 10000;
+      formPrice.min = 10000;
       break;
   }
 };
 
-var onChangeSelectType = formSelectType.addEventListener('change', formPriceSwitch);
-//изменение времени пребывания
+formSelectType.addEventListener('change', formPriceSwitch);
+// изменение времени пребывания
 var selectTimeIn = document.querySelector('#timein');
 var selectTimeOut = document.querySelector('#timeout');
 
-var timeOutChanging = function() {
+var timeOutChanging = function () {
   selectTimeOut.selectedIndex = selectTimeIn.selectedIndex;
 };
 
-var onChangeTimeIn = selectTimeIn.addEventListener('change', timeOutChanging);
+selectTimeIn.addEventListener('change', timeOutChanging);
 
 // изменение кол-ва гостей
 
 var roomNumber = document.querySelector('#room_number');
 var guestsNumber = document.querySelector('#capacity');
 
-var guestsNumberLimit = function() {
-  switch(roomNumber.value) {
-    case ('1'):
+var guestsNumberLimit = function (quantity) {
+  switch (quantity.value) {
+    case '1':
       guestsNumber[0].disabled = true;
-      guestsNumber[1].disabled = true;
+      guestsNumber[1].disabxled = true;
       guestsNumber[3].disabled = true;
-      //guestsNumber.max = '1';
       break;
-    case ('2'):
+    case '2':
       guestsNumber[0].disabled = true;
       guestsNumber[3].disabled = true;
-      //guestsNumber.max = '1';
       break;
-    case ('3'):
+    case '3':
       guestsNumber[3].disabled = true;
-      //guestsNumber.max = '3';
       break;
-    case ('4'):
+    case '100':
       guestsNumber[0].disabled = true;
       guestsNumber[1].disabled = true;
       guestsNumber[2].disabled = true;
-      //guestsNumber.max = '0';
       break;
   }
-}
+};
 
-var onChangeRoomNumber = roomNumber.addEventListener('change', guestsNumberLimit);
+roomNumber.addEventListener('change', guestsNumberLimit);
 
 
 // var setCustomValidity = function(evt) {
@@ -272,10 +273,8 @@ var onChangeRoomNumber = roomNumber.addEventListener('change', guestsNumberLimit
 
 // guestsNumber.addEventListener('invalid', setCustomValidity);
 
-var formSubmit = document.querySelector('.ad-form');
-formSubmit.addEventListener('submit', function (evt) {
+advertForm.addEventListener('submit', function (evt) {
   evt.preventDefault();
-
-  console.log('formSend');
+  console.log ('formSend');
 
 });
